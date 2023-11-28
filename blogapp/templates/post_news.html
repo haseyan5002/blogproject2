@@ -1,0 +1,44 @@
+<!-- ベーステンプレートを適用する -->
+{% extends 'base2.html' %}
+<!-- ヘッダー情報のページタイトルを設定する -->
+{% block title %}MH NEWS - Post{% endblock %}
+
+    {% block contents %}
+    <!-- Bootstrapのグリッドシステム -->
+    <br>
+    <div class="container">
+        <!-- 行を配置 -->
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <!-- 列の左右に余白offset-2を入れる -->
+            <div class="col-md-10 col-lg-8 col-xl-7 col py-4 py-lg-5">
+                <!-- ファイルをアップロードする場合は
+                    enctype="multipart/form-data"が必要-->
+                <form method="POST"
+                    enctype="multipart/form-data" class="bg-light">
+                    {% csrf_token %}
+                    <table>
+                        <br>
+                        <h2 class="text-danger">ニュースを投稿しましょう！</h2>
+                        <br>
+                        <tr>
+                            <th>タイトル</th>
+                            <td>{{ form.title }}</td>
+                        </tr>
+                        <tr>
+                            <th>本文</th>
+                            <td>{{ form.content }}</td>
+                        </tr>
+                        <tr>
+                            <th>カテゴリ</th>
+                            <td>{{ form.category }}</td>
+                        </tr>
+                    </table>
+                    <hr>
+                    <br>
+                    <!-- 投稿ボタン -->
+                    <button class="btn btn-secondary rounded" type="submit">投稿</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endblock %}

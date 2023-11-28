@@ -1,0 +1,107 @@
+<!-- ベーステンプレートを適用 -->
+{% extends 'base.html' %}
+<!-- 静的ファイルのURLを生成するstaticタグをロードする -->
+{% load static %}
+
+<!-- ヘッダー情報のページタイトルは
+ベーステンプレートを使用するページで設定する-->
+{% block title %}MH NEWS{% endblock %}
+
+    <!-- Page Header-->
+    <!-- <header>~</header>をテンプレートタグで囲む -->
+    {% block header %}
+    <header class="masthead"
+            style="background-image: url({% static 'assets/img/home-bg3.jpg' %})">
+        <div class="container position-relative px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="site-heading">
+                        <h1>MH NEWS</h1>
+                        <span class="subheading">最新のニュースをお届けします！</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- <header>~</header>をテンプレートタグで囲む -->
+    {% endblock %}
+
+    <!-- Main Content-->
+    <!-- メインコンテンツを設定する<div>~</div>をテンプレートタグで囲む -->
+    {% block contents %}
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <!-- 検索フォーム -->
+                <!-- 参考1:https://note.com/takuya814/n/n997909c4f89e -->
+                <!-- 参考2:https://qiita.com/yongjugithub/items/07ca78fc882d4ae67386 -->
+                <div class="d-flex justify-content-center">
+                <form class="form-inline my-2" method="GET" action="{% url 'blogapp:index' %}">
+                    <input type="text" class="forms-control" placeholder="タイトルで検索" name="q" value="{{request.GET.q}}">
+                    <button type="submit" value="search" class="btn btn-secondary rounded">検索</button>
+                </form>
+                </div>
+
+                <!-- 「」を含む検索結果の表示 -->
+                {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <br>
+                            <p {% if message.tags %} class="text-danger text-center h3 {{ message.tags }}"{% endif %}>
+                                「{{ message }}」を含む検索結果
+                            </p>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                {% for record in orderby_records %}
+                <!-- Post preview-->
+                <div class="post-preview">
+                    <a href="{% url 'blogapp:news_detail' record.pk %}">
+                        <!-- 記事のタイトル -->
+                        <h2 class="post-title">
+                            <!-- titleフィールドを出力 -->
+                            {{record.title}}</h2>
+                        <!-- 投稿記事の本文 -->
+                        <h3 class="post-subtitle">
+                            <!-- サブタイトルの文字サイズを14ptにする -->
+                            <span style = "font-size : 14pt">
+                                <!-- 
+                                contentフィールドを出力
+                                truncatecharsで出力する文字数を50以内に制限
+                                -->
+                                {{record.content|truncatechars:50}}
+                            </span>
+                        </h3>
+                    </a>
+                    <!-- 投稿日時とカテゴリ -->
+                    <p class="post-meta">
+                        <!-- Posted by
+                        <a href="#!">Start Bootstrap</a>
+                        on September 24, 2023 -->
+                        <!-- ページの最上部にリンクする -->
+                        <a href="#">MH NEWS</a>
+
+                        <!-- posted_atフィールドを出力 -->
+                        {{record.posted_at}}に投稿／カテゴリ:
+
+                        <!-- categoryフィールドを出力 -->
+                        {{record.category}}</p>
+                    </p>
+                </div>
+
+                <!-- Divider-->
+                <hr class="my-4" />
+
+                <!-- forによる繰り返しはここまで -->
+                {% endfor %}
+
+                <!-- Pager-->
+                {% include "pagination.html" %}
+            </div>
+        </div>
+    </div>
+    <!-- メインコンテンツを設定する<div>~</div>をテンプレートタグで囲む -->
+    {% endblock %}
+
+<!-- Footer-->

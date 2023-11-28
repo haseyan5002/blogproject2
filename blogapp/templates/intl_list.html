@@ -1,0 +1,100 @@
+<!-- ベーステンプレートを適用 -->
+{% extends 'base.html' %}
+<!-- 静的ファイルのURLを生成するstaticタグをロードする -->
+{% load static %}
+
+<!-- ヘッダー情報のページタイトルは
+ベーステンプレートを使用するページで設定する-->
+{% block title %}MH NEWS - Intl{% endblock %}
+
+        <!-- Page Header-->
+        <!-- <header>~</header>をテンプレートタグで囲む -->
+        {% block header %}
+        <!-- ヘッダーの背景のイメージのurl()の引数をstaticタグに書き換え -->
+        <header class="masthead" 
+                style="background-image: url({% static 'assets/img/home-bg3.jpg' %})">
+            <div class="container position-relative px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div class="site-heading">
+                            <!-- ページの大見出し(タイトル)を設定 -->
+                            <h1>INTERNATIONAL</h1>
+                            <span class="subheading">国際の記事一覧</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- <header>~</header>をテンプレートタグで囲む -->
+        {% endblock %}
+
+        <!-- Main Content-->
+        <!-- メインコンテンツを設定する<div>~</div>をテンプレートタグで囲む -->
+        {% block contents %}
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <!-- 
+                    レコードが格納されたorderby_recordsから
+                    レコードを1行ずつrecordに取り出す
+                    -->
+                    {% for record in intl_records %}
+                    <!-- Post preview-->
+                    <div class="post-preview">
+                        <!-- 
+                        urlでURLパターン'news-detail/<int:pk>/'を生成し、
+                        詳細ページへのリンクを設定
+                        -->
+                        <a href="{% url 'blogapp:news_detail' record.pk %}">
+                            <!-- 記事のタイトル -->
+                            <h2 class="post-title">
+                                <!-- titleフィールドを出力 -->
+                                {{record.title}}</h2>
+                            <!-- 投稿記事の本文 -->
+                            <h3 class="post-subtitle">
+                                <!-- サブタイトルの文字サイズを14ptにする -->
+                                <span style = "font-size:14pt">
+                                    <!-- 
+                                    contentフィールドを出力
+                                    truncatecharsで出力する文字数を50以内に制限
+                                    -->
+                                    {{record.content|truncatechars:50}}
+                                </span>
+                            </h3>
+                        </a>
+                        <!-- 投稿日時とカテゴリ -->
+                        <p class="post-meta">
+
+                            <!-- ページの最上部にリンクする -->
+                            <a href = "#">MH NEWS</a>
+
+                            <!-- posted_atフィールドを出力 -->
+                            {{record.posted_at}}に投稿／カテゴリ:
+
+                            <!-- categoryフィールドを出力 -->
+                            {{record.category}}</p>
+                        </p>
+                    </div>
+                    <!-- Divider-->
+                    <hr class="my-4" />
+
+                    <!-- forによる繰り返しはここまで -->
+                    {% endfor %}
+
+                    <!-- Pager-->
+                    <!-- ページネーションが組み込まれたテンプレートの読み込み -->
+                    {% include 'pagination.html' %}
+                </div>
+            </div>
+        </div>
+        <!-- メインコンテンツを設定する<div>~</div>をテンプレートタグで囲む -->
+        {% endblock %}
+
+        <!-- Footer-->
+        
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src={% static 'js/scripts.js' %}></script>
+    </body>
+</html>
